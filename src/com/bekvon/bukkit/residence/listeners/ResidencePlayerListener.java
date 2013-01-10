@@ -5,12 +5,14 @@
 
 package com.bekvon.bukkit.residence.listeners;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.chat.ChatChannel;
+import com.bekvon.bukkit.residence.event.ResidenceEnterEvent;
+import com.bekvon.bukkit.residence.event.ResidenceLeaveEvent;
+import com.bekvon.bukkit.residence.permissions.PermissionGroup;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.inori.utils.ILog;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,29 +25,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.chat.ChatChannel;
-import com.bekvon.bukkit.residence.event.ResidenceEnterEvent;
-import com.bekvon.bukkit.residence.event.ResidenceLeaveEvent;
-import com.bekvon.bukkit.residence.permissions.PermissionGroup;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.FlagPermissions;
-import com.inori.utils.ILog;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
- * 
  * @author Administrator
  */
 public class ResidencePlayerListener implements Listener {
@@ -309,8 +298,7 @@ public class ResidencePlayerListener implements Listener {
         String pname = player.getName();
 
         boolean resadmin = Residence.isResAdminOn(player);
-        if (res != null)
-        {
+        if (res != null) {
             if (Residence.getConfigManager().preventRentModify() && Residence.getConfigManager().enabledRentSystem()) {
                 if (Residence.getRentManager().isRented(res.getName())) {
                     player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("RentedModifyDeny"));
@@ -388,8 +376,7 @@ public class ResidencePlayerListener implements Listener {
             return;
         }
         lastUpdate.put(player.getName(), now);
-        if (event.getFrom().getWorld() == event.getTo().getWorld())
-        {
+        if (event.getFrom().getWorld() == event.getTo().getWorld()) {
             ILog.sendToPlayer(player, "onPlayerMove(" + event.getFrom().distance(event.getTo()) + ") Fired");
             if (event.getFrom().distance(event.getTo()) == 0) {
                 return;
