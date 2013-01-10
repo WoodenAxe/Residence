@@ -82,6 +82,7 @@ public class ResidenceEntityListener implements Listener {
         }
     }
     
+    /*
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityInteract(EntityInteractEvent event){
     	Block block = event.getBlock();
@@ -93,6 +94,7 @@ public class ResidenceEntityListener implements Listener {
     		event.setCancelled(true);
     	}
     }
+     */
 /*
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEndermanPlace(EndermanPlaceEvent event) {
@@ -211,7 +213,7 @@ public class ResidenceEntityListener implements Listener {
             }
         }
     }
-
+/*
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityExplode(EntityExplodeEvent event) {
         if (event.isCancelled() || event.getEntity() == null)
@@ -311,6 +313,8 @@ public class ResidenceEntityListener implements Listener {
             }, 1L);
         }
     }
+     * 
+     */
     
     @EventHandler(priority = EventPriority.LOWEST)
     public void onSplashPotion(PotionSplashEvent event) {
@@ -335,13 +339,14 @@ public class ResidenceEntityListener implements Listener {
         if(event.isCancelled())
             return;
         Entity ent = event.getEntity();
-	if(ent.hasMetadata("NPC")) {
-		return;
-	}
+        if(ent.hasMetadata("NPC")) {
+            return;
+        }
         boolean tamedWolf = ent instanceof Wolf ? ((Wolf)ent).isTamed() : false;
-        ClaimedResidence area = Residence.getResidenceManager().getByLoc(ent.getLocation());
+        //ClaimedResidence area = Residence.getResidenceManager().getByLoc(ent.getLocation());
         /* Living Entities */
         if (event instanceof EntityDamageByEntityEvent) {
+            
             EntityDamageByEntityEvent attackevent = (EntityDamageByEntityEvent) event;
             Entity damager = attackevent.getDamager();
             ClaimedResidence srcarea = null;
@@ -363,6 +368,7 @@ public class ResidenceEntityListener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
+                ClaimedResidence area = Residence.getResidenceManager().getByLoc(ent.getLocation());
                 /* Check for Player vs Player */
                 if (area == null) {
                     /* World PvP */
@@ -380,6 +386,7 @@ public class ResidenceEntityListener implements Listener {
                 return;
             }
             else if ((ent instanceof Player || tamedWolf) && (damager instanceof Creeper)) {
+                ClaimedResidence area = Residence.getResidenceManager().getByLoc(ent.getLocation());
                 if (area == null) {
                     if (!Residence.getWorldFlags().getPerms(damager.getWorld().getName()).has("creeper", true)) {
                         event.setCancelled(true);
@@ -391,6 +398,7 @@ public class ResidenceEntityListener implements Listener {
                 }
             }
         }
+        /*
         if (area == null) {
             if (!Residence.getWorldFlags().getPerms(ent.getWorld().getName()).has("damage", true) && (ent instanceof Player || tamedWolf)) {
                 event.setCancelled(true);
@@ -400,6 +408,7 @@ public class ResidenceEntityListener implements Listener {
                 event.setCancelled(true);
             }
         }
+         */
         if (event.isCancelled()) {
             /* Put out a fire on a player */
             if ((ent instanceof Player || tamedWolf)

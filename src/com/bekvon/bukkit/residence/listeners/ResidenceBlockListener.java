@@ -47,6 +47,7 @@ public class ResidenceBlockListener implements Listener {
         if (Residence.getItemManager().isIgnored(mat, group, world)) {
             return;
         }
+        /*
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if (Residence.getConfigManager().enabledRentSystem()) {
             if (res != null) {
@@ -58,13 +59,18 @@ public class ResidenceBlockListener implements Listener {
                 }
             }
         }
+         * 
+         */
         FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlock().getLocation(), player);
         String pname = player.getName();
+        /*
         if (res != null) {
             if (res.getItemIgnoreList().isListed(mat)) {
                 return;
             }
         }
+         * 
+         */
         boolean hasdestroy = perms.playerHas(pname, player.getWorld().getName(), "destroy", perms.playerHas(pname, player.getWorld().getName(), "build", true));
         boolean hasContainer = perms.playerHas(pname, player.getWorld().getName(), "container", true);
         if (!hasdestroy || (!hasContainer && mat == Material.CHEST)) {
@@ -85,6 +91,8 @@ public class ResidenceBlockListener implements Listener {
         String group = Residence.getPermissionManager().getGroupNameByPlayer(player);
         if (Residence.getItemManager().isIgnored(mat, group, world))
             return;
+        
+        /*
         ClaimedResidence res = Residence.getResidenceManager().getByLoc(event.getBlock().getLocation());
         if (Residence.getConfigManager().enabledRentSystem()) {
             if (res != null) {
@@ -96,7 +104,9 @@ public class ResidenceBlockListener implements Listener {
                 }
             }
         }
+         */
         String pname = player.getName();
+        /*
         if (res != null) {
             if (!res.getItemBlacklist().isAllowed(mat)) {
                 player.sendMessage(ChatColor.RED + Residence.getLanguage().getPhrase("ItemBlacklisted"));
@@ -104,6 +114,8 @@ public class ResidenceBlockListener implements Listener {
                 return;
             }
         }
+         *
+         */
         FlagPermissions perms = Residence.getPermsByLocForPlayer(event.getBlock().getLocation(), player);
         boolean hasplace = perms.playerHas(pname, player.getWorld().getName(), "place", perms.playerHas(pname, player.getWorld().getName(), "build", true));
         if (!hasplace) {
@@ -120,7 +132,7 @@ public class ResidenceBlockListener implements Listener {
         if(!perms.has("spread", true))
             event.setCancelled(true);
     }
-
+/*
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         FlagPermissions perms = Residence.getPermsByLoc(event.getBlock().getLocation());
@@ -155,7 +167,8 @@ public class ResidenceBlockListener implements Listener {
             }
         }
     }
-
+*/
+    /*
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockFromTo(BlockFromToEvent event) {
         FlagPermissions perms = Residence.getPermsByLoc(event.getToBlock().getLocation());
@@ -178,6 +191,7 @@ public class ResidenceBlockListener implements Listener {
             return;
         }
     }
+     */
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
