@@ -338,18 +338,7 @@ public class Residence extends JavaPlugin {
                 rentint = rentint * 60 * 20;
                 rentBukkitId = server.getScheduler().scheduleSyncRepeatingTask(this, rentExpire, rentint, rentint);
             }
-            Player[] players = getServer().getOnlinePlayers();
-            for (Player player : players) {
-                if (Residence.getPermissionManager().isResidenceAdmin(player)) {
-                    turnResAdminOn(player);
-                }
-            }
-            try {
-                Metrics metrics = new Metrics(this);
-                metrics.start();
-            } catch (IOException e) {
-                // Failed to submit the stats :-(
-            }
+
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Enabled! Version " + this.getDescription().getVersion() + " by bekvon");
             initsuccess = true;
         } catch (Exception ex) {
