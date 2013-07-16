@@ -4,6 +4,7 @@
 .settings
 /nbproject
 .idea
+Residence.iml
 
 #build
 /pom.xml
