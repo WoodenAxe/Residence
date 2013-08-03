@@ -78,9 +78,9 @@ public class ResidenceManager {
         if (name == null) {
             return null;
         }
-        String[] split = name.split("\\.");
+        String[] split = name.toLowerCase().split("\\.");
         if (split.length == 1) {
-            return residences.get(name);
+            return residences.get(name.toLowerCase());
         }
         ClaimedResidence res = residences.get(split[0]);
         for (int i = 1; i < split.length; i++) {
