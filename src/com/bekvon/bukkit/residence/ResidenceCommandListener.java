@@ -29,6 +29,9 @@ import java.util.List;
 public class ResidenceCommandListener extends Residence {
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        for(int i=0; i < args.length; i++) {
+            args[i] = args[i].toLowerCase();
+        }
         ResidenceCommandEvent cevent = new ResidenceCommandEvent(command.getName(), args, sender);
         server.getPluginManager().callEvent(cevent);
         if (cevent.isCancelled()) {
@@ -366,7 +369,7 @@ public class ResidenceCommandListener extends Residence {
         }
         if (cmd.equals("rename")) {
             if (args.length == 3) {
-                rmanager.renameResidence(player, args[1], args[2].toLowerCase(), resadmin);
+                rmanager.renameResidence(player, args[1], args[2], resadmin);
                 return true;
             }
             return false;
@@ -378,7 +381,7 @@ public class ResidenceCommandListener extends Residence {
                     player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
                     return true;
                 }
-                res.renameArea(player, args[2], args[3].toLowerCase(), resadmin);
+                res.renameArea(player, args[2], args[3], resadmin);
                 return true;
             }
             return false;
@@ -688,7 +691,7 @@ public class ResidenceCommandListener extends Residence {
             }
         }
         if (smanager.hasPlacedBoth(player.getName())) {
-            rmanager.addResidence(player, args[1].toLowerCase(), smanager.getPlayerLoc1(player.getName()), smanager.getPlayerLoc2(player.getName()), resadmin);
+            rmanager.addResidence(player, args[1], smanager.getPlayerLoc1(player.getName()), smanager.getPlayerLoc2(player.getName()), resadmin);
             return true;
         } else {
             player.sendMessage(ChatColor.RED + language.getPhrase("SelectPoints"));
@@ -721,7 +724,7 @@ public class ResidenceCommandListener extends Residence {
                 player.sendMessage(ChatColor.RED + language.getPhrase("InvalidResidence"));
                 return true;
             }
-            res.addSubzone(player, smanager.getPlayerLoc1(player.getName()), smanager.getPlayerLoc2(player.getName()), zname.toLowerCase(), resadmin);
+            res.addSubzone(player, smanager.getPlayerLoc1(player.getName()), smanager.getPlayerLoc2(player.getName()), zname, resadmin);
             return true;
         } else {
             player.sendMessage(ChatColor.RED + language.getPhrase("SelectPoints"));

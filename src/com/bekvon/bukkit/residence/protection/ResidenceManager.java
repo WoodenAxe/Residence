@@ -80,7 +80,7 @@ public class ResidenceManager {
         }
         String[] split = name.toLowerCase().split("\\.");
         if (split.length == 1) {
-            return residences.get(name.toLowerCase());
+            return residences.get(name);
         }
         ClaimedResidence res = residences.get(split[0]);
         for (int i = 1; i < split.length; i++) {
