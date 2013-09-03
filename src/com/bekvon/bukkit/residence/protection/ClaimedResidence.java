@@ -28,9 +28,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 /**
- * 
+ *
  * @author Administrator
- * 
+ *
  */
 public class ClaimedResidence {
 
@@ -65,6 +65,41 @@ public class ClaimedResidence {
     public ClaimedResidence(String creator, String creationWorld, ClaimedResidence parentResidence) {
         this(creator, creationWorld);
         parent = parentResidence;
+    }
+
+    public static ClaimedResidence load(Map<String, Object> root, ClaimedResidence parent) throws Exception {
+        ClaimedResidence res = new ClaimedResidence();
+        if (root == null)
+            throw new Exception("Null residence!");
+        res.enterMessage = (String) root.get("EnterMessage");
+        res.leaveMessage = (String) root.get("LeaveMessage");
+        if (root.containsKey("StoredMoney"))
+            res.bank.setStoredMoney((Integer) root.get("StoredMoney"));
+        if (root.containsKey("BlackList"))
+            res.blacklist = ResidenceItemList.load(res, (Map<String, Object>) root.get("BlackList"));
+        if (root.containsKey("IgnoreList"))
+            res.ignorelist = ResidenceItemList.load(res, (Map<String, Object>) root.get("IgnoreList"));
+        Map<String, Object> areamap = (Map<String, Object>) root.get("Areas");
+        res.perms = ResidencePermissions.load(res, (Map<String, Object>) root.get("Permissions"));
+        World world = Residence.getServ().getWorld(res.perms.getWorld());
+        if (world == null)
+            throw new Exception("Cant Find World: " + res.perms.getWorld());
+        for (Entry<String, Object> map : areamap.entrySet()) {
+            res.areas.put(map.getKey(), CuboidArea.load((Map<String, Object>) map.getValue(), world));
+        }
+        Map<String, Object> subzonemap = (Map<String, Object>) root.get("Subzones");
+        for (Entry<String, Object> map : subzonemap.entrySet()) {
+            ClaimedResidence subres = ClaimedResidence.load((Map<String, Object>) map.getValue(), res);
+            if (Residence.getConfigManager().flagsInherit())
+                subres.getPermissions().setParent(res.getPermissions());
+            res.subzones.put(map.getKey(), subres);
+        }
+        res.parent = parent;
+        Map<String, Object> tploc = (Map<String, Object>) root.get("TPLoc");
+        if (tploc != null) {
+            res.tpLoc = new Location(world, (Integer) tploc.get("X"), (Integer) tploc.get("Y"), (Integer) tploc.get("Z"));
+        }
+        return res;
     }
 
     public boolean addArea(CuboidArea area, String name) {
@@ -531,12 +566,12 @@ public class ClaimedResidence {
         return enterMessage;
     }
 
-    public String getLeaveMessage() {
-        return leaveMessage;
-    }
-
     public void setEnterMessage(String message) {
         enterMessage = message;
+    }
+
+    public String getLeaveMessage() {
+        return leaveMessage;
     }
 
     public void setLeaveMessage(String message) {
@@ -800,41 +835,6 @@ public class ClaimedResidence {
         return root;
     }
 
-    public static ClaimedResidence load(Map<String, Object> root, ClaimedResidence parent) throws Exception {
-        ClaimedResidence res = new ClaimedResidence();
-        if (root == null)
-            throw new Exception("Null residence!");
-        res.enterMessage = (String) root.get("EnterMessage");
-        res.leaveMessage = (String) root.get("LeaveMessage");
-        if (root.containsKey("StoredMoney"))
-            res.bank.setStoredMoney((Integer) root.get("StoredMoney"));
-        if (root.containsKey("BlackList"))
-            res.blacklist = ResidenceItemList.load(res, (Map<String, Object>) root.get("BlackList"));
-        if (root.containsKey("IgnoreList"))
-            res.ignorelist = ResidenceItemList.load(res, (Map<String, Object>) root.get("IgnoreList"));
-        Map<String, Object> areamap = (Map<String, Object>) root.get("Areas");
-        res.perms = ResidencePermissions.load(res, (Map<String, Object>) root.get("Permissions"));
-        World world = Residence.getServ().getWorld(res.perms.getWorld());
-        if (world == null)
-            throw new Exception("Cant Find World: " + res.perms.getWorld());
-        for (Entry<String, Object> map : areamap.entrySet()) {
-            res.areas.put(map.getKey(), CuboidArea.load((Map<String, Object>) map.getValue(), world));
-        }
-        Map<String, Object> subzonemap = (Map<String, Object>) root.get("Subzones");
-        for (Entry<String, Object> map : subzonemap.entrySet()) {
-            ClaimedResidence subres = ClaimedResidence.load((Map<String, Object>) map.getValue(), res);
-            if (Residence.getConfigManager().flagsInherit())
-                subres.getPermissions().setParent(res.getPermissions());
-            res.subzones.put(map.getKey(), subres);
-        }
-        res.parent = parent;
-        Map<String, Object> tploc = (Map<String, Object>) root.get("TPLoc");
-        if (tploc != null) {
-            res.tpLoc = new Location(world, (Integer) tploc.get("X"), (Integer) tploc.get("Y"), (Integer) tploc.get("Z"));
-        }
-        return res;
-    }
-
     public int getAreaCount()
     {
         return areas.size();
@@ -970,5 +970,18 @@ public class ClaimedResidence {
             }
         }
         return within;
+    }
+
+    public Boolean isWest()
+    {
+        if (null != tpLoc) {
+            return tpLoc.getX() <= 0;
+        }
+        CuboidArea area = areas.values().iterator().next();
+        if (area == null) {
+            return true;
+        }
+        Location tpLoc = this.getOutsideFreeLoc(area.getHighLoc());
+        return tpLoc.getX() <= 0;
     }
 }

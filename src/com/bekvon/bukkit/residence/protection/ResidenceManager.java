@@ -432,6 +432,13 @@ public class ResidenceManager {
         if (Residence.getConfigManager().useLeases() && Residence.getLeaseManager().leaseExpires(areaname)) {
             player.sendMessage(ChatColor.YELLOW + Residence.getLanguage().getPhrase("LeaseExpire") + ":" + ChatColor.GREEN + " " + Residence.getLeaseManager().getExpireTime(areaname));
         }
+
+        // print whether the TP point is in the east or west
+        if(res.isWest()) {
+            player.sendMessage(ChatColor.YELLOW + "Location:" + ChatColor.RED + " West");
+        } else {
+            player.sendMessage(ChatColor.YELLOW + "Location:" + ChatColor.GREEN + " East");
+        }
     }
 
     public void mirrorPerms(Player reqPlayer, String targetArea, String sourceArea, boolean resadmin) {
