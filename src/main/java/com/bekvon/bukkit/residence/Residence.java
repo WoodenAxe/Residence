@@ -295,12 +295,12 @@ public class Residence extends JavaPlugin {
                     turnResAdminOn(player);
                 }
             }
-            try {
-                Metrics metrics = new Metrics(this);
-                metrics.start();
-            } catch (IOException e) {
-                // Failed to submit the stats :-(
-            }
+//            try {
+//                Metrics metrics = new Metrics(this);
+//                metrics.start();
+//            } catch (IOException e) {
+//                // Failed to submit the stats :-(
+//            }
             Logger.getLogger("Minecraft").log(Level.INFO, "[Residence] Enabled! Version " + this.getDescription().getVersion() + " by bekvon");
             initsuccess = true;
         } catch (Exception ex) {
@@ -688,4 +688,3 @@ public class Residence extends JavaPlugin {
         }
     }
 }
-
